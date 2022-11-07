@@ -1,72 +1,68 @@
 use std::error::Error;
-use std::fs::File;
-use std::io::{Read, Seek, SeekFrom};
+use std::time::Instant;
 
-#[derive(Default)]
-pub struct SosiStringObject<'a>{
-    lines:Vec<&'a str>
-}
-impl<'a> SosiStringObject<'a>{
-    pub fn new() -> SosiStringObject<'a>{
-        SosiStringObject{
-            lines: Vec::new()
-        }
-    }
+static NUM_PARAGRAPHS: i32 = 1500;
+
+struct CustomResult {
+    read_string:String
 }
 
-fn get_sosi_string_objects(contents: &str) -> Vec<SosiStringObject> {
-    let content_lines = contents.lines();
-    let mut sosi_string_objects = Vec::new();
+fn get_string_as_custom_result() -> CustomResult {
+    let mut ret_val = CustomResult { read_string: String::from("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Eget velit aliquet sagittis id consectetur. Tincidunt id aliquet risus feugiat in ante metus dictum. Porta nibh venenatis cras sed felis eget. A arcu cursus vitae congue mauris rhoncus aenean vel. Scelerisque mauris pellentesque pulvinar pellentesque habitant morbi tristique. Ornare arcu odio ut sem nulla pharetra. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. Nisi est sit amet facilisis magna etiam tempor orci eu. Tincidunt vitae semper quis lectus nulla at. Quis viverra nibh cras pulvinar mattis nunc sed blandit. Et odio pellentesque diam volutpat commodo sed. Ac felis donec et odio pellentesque diam volutpat commodo sed. Nunc faucibus a pellentesque sit amet porttitor eget dolor. Pretium quam vulputate dignissim suspendisse in est. Odio morbi quis commodo odio aenean sed adipiscing diam.\n") };
 
-    let mut first:bool = true;
-    let mut current_object= SosiStringObject::new();
-    for l in content_lines{
-        let mut chars = l.chars();
-        if chars.next().unwrap() == '.' && chars.next().unwrap() != '.' {
-            if !first {
-                sosi_string_objects.push(current_object);
-                current_object = SosiStringObject::new();
-            }else{
-                first = false;
-            }
-
-        }
-        current_object.lines.push(l);
+    for _ in 0..NUM_PARAGRAPHS {
+        String::push_str(&mut ret_val.read_string, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Eget velit aliquet sagittis id consectetur. Tincidunt id aliquet risus feugiat in ante metus dictum. Porta nibh venenatis cras sed felis eget. A arcu cursus vitae congue mauris rhoncus aenean vel. Scelerisque mauris pellentesque pulvinar pellentesque habitant morbi tristique. Ornare arcu odio ut sem nulla pharetra. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. Nisi est sit amet facilisis magna etiam tempor orci eu. Tincidunt vitae semper quis lectus nulla at. Quis viverra nibh cras pulvinar mattis nunc sed blandit. Et odio pellentesque diam volutpat commodo sed. Ac felis donec et odio pellentesque diam volutpat commodo sed. Nunc faucibus a pellentesque sit amet porttitor eget dolor. Pretium quam vulputate dignissim suspendisse in est. Odio morbi quis commodo odio aenean sed adipiscing diam.\n");
     }
-    //need to subtract 1 since the counter updates and then exits.
-    sosi_string_objects.push(current_object);
 
-    println!("Parsing file, we found {} sosi-objects", sosi_string_objects.len());
-
-    sosi_string_objects
+    let _break_here_to_trigger_delay = 0;
+    println!("{:?}", Instant::now());
+    ret_val
 }
 
-fn get_string_without_bom(filename: &str) -> Result<String, Box<dyn Error>> {
-    let mut first_byte = vec![0u8, 1];
-
-    let mut f = File::open(&filename)?;
-    let mut contents: String = String::new();
-    f.read_exact(&mut first_byte)?;
-    if first_byte[0] > 127u8 {
-        println!("BOM detected, seeking past it");
-        //we have a BOM
-        f.seek(SeekFrom::Start(3))?;
-    } else {
-        f.rewind()?;
+fn get_string_as_result() -> Result<String, Box<dyn Error>> {
+    let mut contents: String = String::from("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Eget velit aliquet sagittis id consectetur. Tincidunt id aliquet risus feugiat in ante metus dictum. Porta nibh venenatis cras sed felis eget. A arcu cursus vitae congue mauris rhoncus aenean vel. Scelerisque mauris pellentesque pulvinar pellentesque habitant morbi tristique. Ornare arcu odio ut sem nulla pharetra. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. Nisi est sit amet facilisis magna etiam tempor orci eu. Tincidunt vitae semper quis lectus nulla at. Quis viverra nibh cras pulvinar mattis nunc sed blandit. Et odio pellentesque diam volutpat commodo sed. Ac felis donec et odio pellentesque diam volutpat commodo sed. Nunc faucibus a pellentesque sit amet porttitor eget dolor. Pretium quam vulputate dignissim suspendisse in est. Odio morbi quis commodo odio aenean sed adipiscing diam.\n");
+    for _ in 0..NUM_PARAGRAPHS {
+        String::push_str(&mut contents, "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Eget velit aliquet sagittis id consectetur. Tincidunt id aliquet risus feugiat in ante metus dictum. Porta nibh venenatis cras sed felis eget. A arcu cursus vitae congue mauris rhoncus aenean vel. Scelerisque mauris pellentesque pulvinar pellentesque habitant morbi tristique. Ornare arcu odio ut sem nulla pharetra. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. Nisi est sit amet facilisis magna etiam tempor orci eu. Tincidunt vitae semper quis lectus nulla at. Quis viverra nibh cras pulvinar mattis nunc sed blandit. Et odio pellentesque diam volutpat commodo sed. Ac felis donec et odio pellentesque diam volutpat commodo sed. Nunc faucibus a pellentesque sit amet porttitor eget dolor. Pretium quam vulputate dignissim suspendisse in est. Odio morbi quis commodo odio aenean sed adipiscing diam.\n")
     }
-
-    f.read_to_string(&mut contents)?;
-
+    let _break_here_to_trigger_delay = 0;
+    println!("{:?}", Instant::now());
     Ok(contents)
 }
 
+fn get_string() -> String {
+    let mut contents: String = String::from("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Eget velit aliquet sagittis id consectetur. Tincidunt id aliquet risus feugiat in ante metus dictum. Porta nibh venenatis cras sed felis eget. A arcu cursus vitae congue mauris rhoncus aenean vel. Scelerisque mauris pellentesque pulvinar pellentesque habitant morbi tristique. Ornare arcu odio ut sem nulla pharetra. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. Nisi est sit amet facilisis magna etiam tempor orci eu. Tincidunt vitae semper quis lectus nulla at. Quis viverra nibh cras pulvinar mattis nunc sed blandit. Et odio pellentesque diam volutpat commodo sed. Ac felis donec et odio pellentesque diam volutpat commodo sed. Nunc faucibus a pellentesque sit amet porttitor eget dolor. Pretium quam vulputate dignissim suspendisse in est. Odio morbi quis commodo odio aenean sed adipiscing diam.\n");
+    for _ in 0..NUM_PARAGRAPHS {
+        String::push_str(&mut contents, "{} Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Eget velit aliquet sagittis id consectetur. Tincidunt id aliquet risus feugiat in ante metus dictum. Porta nibh venenatis cras sed felis eget. A arcu cursus vitae congue mauris rhoncus aenean vel. Scelerisque mauris pellentesque pulvinar pellentesque habitant morbi tristique. Ornare arcu odio ut sem nulla pharetra. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. Nisi est sit amet facilisis magna etiam tempor orci eu. Tincidunt vitae semper quis lectus nulla at. Quis viverra nibh cras pulvinar mattis nunc sed blandit. Et odio pellentesque diam volutpat commodo sed. Ac felis donec et odio pellentesque diam volutpat commodo sed. Nunc faucibus a pellentesque sit amet porttitor eget dolor. Pretium quam vulputate dignissim suspendisse in est. Odio morbi quis commodo odio aenean sed adipiscing diam.\n")
+    }
+    let _break_here_to_trigger_minimal_delay = 0;
+    println!("{:?}", Instant::now());
 
+    contents
+}
 
 fn main() {
-    let input_file_path = "C:\\Users\\Erik W. Bjønnes\\Documents\\repos\\jobb\\faerder.sos";
-    let contents = get_string_without_bom(input_file_path).unwrap();
-    let sosi_string_objects = get_sosi_string_objects(&contents);
 
-    println!("We found {} objects", sosi_string_objects.len());
+    let _break_here_to_attach = 0;
+
+    {
+        println!("get_string()");
+        let _string_contents = get_string();
+        println!("{:?}", Instant::now());
+    }
+    let _another_break = 0;
+    {
+        println!("get_string_as_custom_result()");
+        let _custom_result = get_string_as_custom_result();
+        println!("{:?}", Instant::now());
+    }
+    let _final_break = 0;
+    {
+
+        println!("get_string_as_result()");
+        let _result_contents = get_string_as_result();
+        println!("{:?}", Instant::now());
+    }
+    println!("Test completed");
+
 
 }
